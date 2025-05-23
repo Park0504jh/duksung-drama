@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>드라마 추천</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="style.css">
+  </head>
+<body>
+  <h1><덕새가 추천하는 드라마></h1>
+  <div>
+    <img src="image/bird.png">
+    <br>
+    "당신의 취향을 적어주세요!"
+  </div>
+  <form id="fortune-form">
+    <label for="type">장르</label>
+    <input type="text" id="type" name="type" required />
+
+
+    <label for="country">나라 (예: 중국, 미국, 한국)</label>
+    <input type="text" id="country" name="country" required />
+
+    <button type="submit">드라마 추천받기</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById("fortune-form");
+    const resultDiv = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const type = document.getElementById("type").value;
+      const country = document.getElementById("country").value;
+      
+      resultDiv.textContent = "드라마를 찾고 있는 중입니다...";
+
+      try {
+        const response = await fetch("https://assign2-taupe.vercel.app/api/duksungAI", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ type, country }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          resultDiv.textContent = data.answer;
+        } else {
+          resultDiv.textContent = `오류: ${data.error}`;
+        }
+      } catch (err) {
+        resultDiv.textContent = "서버와 통신 중 오류가 발생했습니다.";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
