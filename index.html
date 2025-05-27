@@ -51,7 +51,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          resultDiv.textContent = data.answer;
+          resultDiv.innerHTML = data.answer.replace(/\n/g, "<br>");
         } else {
           resultDiv.textContent = `오류: ${data.error}`;
         }
